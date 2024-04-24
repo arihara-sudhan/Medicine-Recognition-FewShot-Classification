@@ -1,8 +1,9 @@
-# import required module
-from pydub import AudioSegment
-from pydub.playback import play
+import pyttsx3
+engine = pyttsx3.init() # object creation
+rate = engine.getProperty('rate')
+engine.setProperty('rate', 125)
 
-# for playing mp3 file
-song = AudioSegment.from_mp3("voice.mp3")
-print('playing sound using pydub')
-play(song)
+def speak(txt):
+    engine.say(txt)
+    engine.runAndWait()
+    engine.stop()
