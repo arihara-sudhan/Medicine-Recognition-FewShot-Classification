@@ -4,6 +4,12 @@ import pickle
 from tripletclass import Model
 from PIL import Image
 import os
+import json
+from tts import speak
+
+with open('meta/meta.json') as f:
+    data = json.load(f)
+
 
 # Set environment variable to suppress OpenMP warning
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
@@ -34,17 +40,13 @@ def main():
         print("Error: Unable to open camera.")
         return
 
-    # Create a full screen window
-    cv2.namedWindow('Camera Feed', cv2.WINDOW_NORMAL)
-    cv2.setWindowProperty('Camera Feed', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-
     while True:
         # Capture frame-by-frame
         ret, frame = cap.read()
 
         if ret:
             # Display the captured frame
-            cv2.imshow('Camera Feed', frame)
+            cv2.imshow('SHOW THE TABLET AND CLICK ENTER', frame)
 
             # Check for key press events
             key = cv2.waitKey(1)
@@ -54,6 +56,7 @@ def main():
                 embedding = get_image_embedding("./imgs/frame.jpg")
                 label = find_nearest_neighbor(embedding)
                 print(label)
+                speak(data.get(label))
 
             elif key == 27:  # 27 is the ASCII code for the Escape key
                 break
@@ -66,3 +69,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
