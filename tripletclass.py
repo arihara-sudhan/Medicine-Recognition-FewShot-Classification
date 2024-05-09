@@ -8,29 +8,32 @@ import os
 import random
 
 class TEmbeddingNet(nn.Module):
-    def __init__(self, model):
+    def __init__(self, modelt):
         super(TEmbeddingNet, self).__init__()
-        self.model = model
-        self.feature_extractor = nn.Sequential(*list(model.children())[:-1])
+        self.modelt = modelt
+        self.feature_extractor = nn.Sequential(*list(modelt.children())[:-1])
 
     def forward(self, x):
         features = self.feature_extractor(x)
         return features
 
     def get_embedding(self, x):
+        # Forward pass to get the embedding
         return self.forward(x)
 
 
 class TripletNet(nn.Module):
     def __init__(self, embedding_net):
         super(TripletNet, self).__init__()
-        self.embedding_net = embedding_net
+        self.enet = embedding_net
 
     def forward(self, x1, x2=None, x3=None):
         if x2 is None and x3 is None:
-            return self.embedding_net.get_embedding(x1)
-        return self.embedding_net.get_embedding(x1), self.embedding_net.get_embedding(x2), self.embedding_net.get_embedding(x3)
+            return self.enet.get_embedding(x1)
+        return self.enet.get_embedding(x1),self.enet.get_embedding(x2),self.enet.get_embedding(x3)
 
+    def get_embedding(self, x):
+        return self.enet.get_embedding(x)
 
 class Model:
     resnet50 = models.resnet50(pretrained=True)  # Ensure pretrained weights are loaded
